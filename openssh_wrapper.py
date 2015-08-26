@@ -434,6 +434,8 @@ class SSHConnection(object):
                 cmd += ['-i', self.identity_file]
             if self.port:
                 cmd += ['-P', self.port]
+            for option in self.options:
+                cmd += ['-o', option]
             cmd.append('%s:%s' % (remotename, remotefile))
             cmd.append(localtarget)
             

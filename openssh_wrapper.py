@@ -302,13 +302,11 @@ class SSHConnection(object):
                 # pipe.terminate() # only in python 2.6 allowed
                 os.kill(pipe.pid, signal.SIGTERM)
                 signal.alarm(0)  # disable alarm
-                cleanup_tmp_dir()
                 raise SSHError("%s (under %s): %s" % (
                     ' '.join(scp_command), self.user, str(exc)))
             signal.alarm(0)  # disable alarm
             returncode = pipe.returncode
             if returncode != 0:  # ssh client error
-                cleanup_tmp_dir()
                 raise SSHError("%s (under %s): %s" % (
                     ' '.join(scp_command), self.user, err.strip()))
     
@@ -319,14 +317,12 @@ class SSHConnection(object):
                     cmd = b_quote(cmd_chunks)
                     result = self.run(cmd)
                     if result.returncode:
-                        cleanup_tmp_dir()
                         raise SSHError("change mode: %s" % result.stderr.strip())
                 if owner:
                     cmd_chunks = ['chown', owner] + targets
                     cmd = b_quote(cmd_chunks)
                     result = self.run(cmd)
                     if result.returncode:
-                        cleanup_tmp_dir()
                         raise SSHError("change owner: %s" % result.stderr.strip())
 
     def convert_files_to_filenames(self, files):
